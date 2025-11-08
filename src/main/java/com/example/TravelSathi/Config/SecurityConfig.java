@@ -27,7 +27,14 @@ public class SecurityConfig {
             .cors().and()
             .csrf().disable()
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/user/register", "/api/user/login").permitAll()
+                .requestMatchers(
+                    "/api/user/register",
+                    "/api/user/login",
+                    "/api/flights/**",
+                    "/api/stays/**",
+                    "/api/auth/**",
+                    "/api/public/**"
+                ).permitAll()
                 .requestMatchers("/api/admin/**").hasRole("ADMIN")
                 .anyRequest().authenticated()
             )
@@ -41,8 +48,8 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        // Allow your frontend URL
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:8082"));
+        // ✅ Update to your frontend’s real URL (port 30082 for your Nginx/Tomcat frontend)
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:30082"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("*"));
         configuration.setAllowCredentials(true);
