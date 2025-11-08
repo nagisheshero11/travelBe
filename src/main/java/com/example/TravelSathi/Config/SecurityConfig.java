@@ -32,14 +32,15 @@ public class SecurityConfig {
                     "/api/user/login",
                     "/api/flights/**",
                     "/api/stays/**",
-                    "/api/auth/**",
                     "/api/public/**"
                 ).permitAll()
                 .requestMatchers("/api/admin/**").hasRole("ADMIN")
                 .anyRequest().authenticated()
             )
-            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+            .sessionManagement()
+            .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
+        // Add JWT filter before username/password authentication
         http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
@@ -48,8 +49,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        // ✅ Update to your frontend’s real URL (port 30082 for your Nginx/Tomcat frontend)
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:30082"));
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:30082")); // Frontend port
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("*"));
         configuration.setAllowCredentials(true);
